@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/69/trunk/pyjld.amqp/trunk/src/pyjld/amqp/client_0_8/layers
+END
+base.py
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/68/trunk/pyjld.amqp/trunk/src/pyjld/amqp/client_0_8/layers/base.py
+END
+frame.py
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/69/trunk/pyjld.amqp/trunk/src/pyjld/amqp/client_0_8/layers/frame.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/64/trunk/pyjld.amqp/trunk/src/pyjld/amqp/client_0_8/layers/__init__.py
+END
+method.py
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/68/trunk/pyjld.amqp/trunk/src/pyjld/amqp/client_0_8/layers/method.py
+END
+resolver.py
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/68/trunk/pyjld.amqp/trunk/src/pyjld/amqp/client_0_8/layers/resolver.py
+END
+stack.py
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/69/trunk/pyjld.amqp/trunk/src/pyjld/amqp/client_0_8/layers/stack.py
+END

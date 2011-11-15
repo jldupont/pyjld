@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/77/trunk/pyjld.phidgets/trunk/src/pyjld/phidgets/erl_manager
+END
+erl_server.py
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/77/trunk/pyjld.phidgets/trunk/src/pyjld/phidgets/erl_manager/erl_server.py
+END
+msgs.py
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/71/trunk/pyjld.phidgets/trunk/src/pyjld/phidgets/erl_manager/msgs.py
+END
+erl_manager_daemon.py
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/77/trunk/pyjld.phidgets/trunk/src/pyjld/phidgets/erl_manager/erl_manager_daemon.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/70/trunk/pyjld.phidgets/trunk/src/pyjld/phidgets/erl_manager/__init__.py
+END
+actions.py
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/70/trunk/pyjld.phidgets/trunk/src/pyjld/phidgets/erl_manager/actions.py
+END
+cmd.py
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/71/trunk/pyjld.phidgets/trunk/src/pyjld/phidgets/erl_manager/cmd.py
+END
+main.py
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/71/trunk/pyjld.phidgets/trunk/src/pyjld/phidgets/erl_manager/main.py
+END

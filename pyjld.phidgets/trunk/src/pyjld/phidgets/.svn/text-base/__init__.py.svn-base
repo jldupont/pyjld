@@ -1,0 +1,9 @@
+#!/usr/bin/env python
+""" 
+pyjld.phidgets.bonjour package
+
+@author: Jean-Lou Dupont
+"""
+__author__  = "Jean-Lou Dupont"
+__email     = "python (at) jldupont.com"
+__fileid    = "$Id$"

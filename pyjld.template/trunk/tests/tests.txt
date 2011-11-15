@@ -1,0 +1,22 @@
+String_tools
+============
+
+>>> import pyjld.template
+>>> t=pyjld.template.ExTemplate("var: ^^var")
+>>> print t.substitute({'var':'variable'})
+var: variable
+
+
+>>> msg="ns[$ns] pkg[$pkg]"
+>>> print pyjld.template.safe_subvars(msg, ns="pyjld", pkg="template")
+ns[pyjld] pkg[template]
+
+
+
+Standard library 'string' module
+================================
+>>> from string import Template
+>>> msg="key[$key] nokey[$nokey]"
+>>> t=Template(msg)
+>>> print t.safe_substitute({'key':'present'})
+key[present] nokey[$nokey]

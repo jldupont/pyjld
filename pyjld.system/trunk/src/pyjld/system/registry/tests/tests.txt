@@ -1,0 +1,7 @@
+>>> from pyjld.system.registry import Registry
+>>> r = Registry()
+>>> print r.getKey("invalid_app", "invalid_key")
+None
+>>> r.setKey("testapp", "test_key", "test_value")
+>>> print r.getKey("testapp", "test_key")
+test_value

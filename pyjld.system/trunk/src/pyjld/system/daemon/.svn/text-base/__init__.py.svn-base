@@ -1,0 +1,10 @@
+#!/usr/bin/env python
+""" 
+pyjld.system.daemon
+
+"""
+__author__  = "Jean-Lou Dupont"
+__email     = "python (at) jldupont.com"
+__fileid    = "$Id$"
+
+from base import *

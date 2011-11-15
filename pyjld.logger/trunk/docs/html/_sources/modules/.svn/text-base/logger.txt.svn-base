@@ -1,0 +1,11 @@
+:mod:`pyjld.logger`
+-------------------
+
+.. automodule:: pyjld.logger.logger
+
+Functions
+=========
+
+.. autofunction:: pyjld.logger.logger.logger
+.. autofunction:: pyjld.logger.logger.xcLogger
+

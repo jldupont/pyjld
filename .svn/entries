@@ -1,0 +1,61 @@
+10
+
+dir
+97
+http://pyjld.googlecode.com/svn/trunk
+http://pyjld.googlecode.com/svn
+
+
+
+2009-10-14T00:25:22.688514Z
+97
+jeanlou.dupont
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7a91d9d8-1d35-11de-8b5c-13accb87f508
+
+pyjld.amqp
+dir
+
+pyjld.logger
+dir
+
+pyjld.notifier
+dir
+
+pyjld.music
+dir
+
+_tests
+dir
+
+pyjld.os
+dir
+
+pyjld.system
+dir
+
+pyjld.builder
+dir
+
+pyjld.phidgets
+dir
+
+pyjld.template
+dir
+
+dev
+dir
+

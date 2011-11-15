@@ -1,0 +1,7 @@
+#!/usr/bin/env python
+"""
+pyjld.amqp.client_0_9
+"""
+__author__  = "Jean-Lou Dupont"
+__email     = "python (at) jldupont.com"
+__fileid    = "$Id$"

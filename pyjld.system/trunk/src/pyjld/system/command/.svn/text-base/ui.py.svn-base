@@ -1,0 +1,339 @@
+#!/usr/bin/env python
+""" 
+pyjld.system.command.ui
+"""
+__author__  = "Jean-Lou Dupont"
+__fileid    = "$Id$"
+
+__all__ = ['BaseCmdUI', 'BaseCmdUIConfigError', 'ExOptionParser']
+
+import sys
+from string import Template
+from optparse import OptionParser, Option
+
+
+
+class BaseCmdUIConfigError(Exception):
+    """
+    Base exception class for this module
+    """
+    def __init__(self, msg, params = None):
+        Exception.__init__(self, msg)
+        self.msg = msg
+        self.params = params
+
+
+
+
+class ExOptionParser(OptionParser):
+    """
+    Enhances the standard library's OptionParser class
+    
+    Adds the method :meth:`ex_add_options`
+    """
+    def __init__(self, *pargs, **kwargs):
+        OptionParser.__init__( self, *pargs, **kwargs )
+        
+    def ex_add_options(self, options_list):
+        """
+        Adds options through a keyword dictionary only.
+        This constrasts to :meth:`add_options` which goes 
+        through hoops to support both positional &
+        keyword based argument list.
+        
+        This method translates the `options_list` for
+        the base class.
+        
+        :param options_list: a list of dictionaries containing the options
+        
+        Each dictionary entry (i.e. each list item) will be translated
+        to comply with the standard base class OptionParser. Furthermore,
+        only options which are supported by the base class are passed
+        to the OptionParser: this behavior allows for extending the 
+        ``options_list`` entries (i.e. each dictionary item) with custom
+        keys without breaking OptionParser.
+        
+            [ { option } ... ]
+    
+        In each `option`, the keys which are translated are:
+            * short
+            * long
+            
+        Thus, a full option list can be passed to :meth:`ex_add_options` 
+        without worrying about the special cases *short* and *long* 
+        positional arguments.
+
+        """
+       
+        #go through the translation
+        translated_options = []  # [ (short, long, option), ...]
+        
+        for option_dict in options_list:
+            short = option_dict.get('short', None)
+            long  = option_dict.get('long', None)
+            popt  = [short, long]
+            popt  = filter(None, popt)
+            #filter out unsupported keys
+            filtered_keys = filter(lambda X: X in Option.ATTRS, option_dict)
+            #rebuild dict
+            filtered_dict = dict( [(key, option_dict[key]) for key
+                                   in option_dict 
+                                   if key in filtered_keys] )                
+            #build a entry
+            translated_options.append((popt, filtered_dict))
+
+        # inject in the base class
+        for popt, fdict in translated_options:
+            if not popt:
+                raise RuntimeError('missing `short` and/or `long` keys')            
+            self.add_option( *popt, **fdict)
+
+
+
+# =====================================================================================
+
+
+
+class BaseCmdUI(object):
+    """ 
+    Base class for Command Line UI
+    
+    :param msgs: messages object
+    :param template_factory: the factory for creating templates out of ``message_id``
+    
+    **Messages object**
+    
+    This object can be controlled with through ``template_factory``; the latter
+    must implement a ``safe_substitute`` method for rendering the ``message_id``
+    with the given ``parameters`` to a message string.
+
+    """
+    _platform_win32 = sys.platform[:3] == 'win'
+    
+    def __init__(self, msgs, ref_options=None, logger = None, template_factory = None):
+        self.logger = logger
+        self.msgs = msgs
+        self.options = None
+        self.args = None
+        self.command = None
+        self.ref_options = ref_options
+        
+        #if not ref_options:
+        #    raise RuntimeError('ref_options is invalid')
+        
+        # from the standard 'string' module
+        if template_factory is None:
+            self.template_factory = Template
+        else:
+            self.template_factory = template_factory
+            
+    
+    def popArg(self):
+        """ 
+        Pops one argument from the list
+        """
+        return self.args.pop(0)
+
+
+    def handleError( self, exc ):
+        """ 
+        Displays, if required, an appropriate user message
+        corresponding to an error condition.
+            
+        :param exc: Exception being raised
+        
+        :rtype: boolean True if the exception was handled
+                successfully i.e. a message was found and
+                rendered correctly.
+        """
+        try:    already_handled = exc.already_handled
+        except: already_handled = False
+        
+        #silently ignore if the expception was
+        # already handled
+        if already_handled:
+            return True
+        
+        try:    msg_key = exc.msg    
+        except: 
+            try:    msg_key = exc.msg_id
+            except: msg_key = None
+
+        try:    params = exc.params
+        except: params = None            
+
+        msg_found = False
+        if (msg_key):  
+            try:
+                msg_base = self.msgs.get(msg_key, None)
+                msg_tpl = self.template_factory(msg_base)
+                msg = msg_tpl.safe_substitute(params)
+                msg_found = True
+            except: 
+                msg = str(exc)
+        else:
+            msg = str(exc)
+                    
+        try:    self.logger.error( msg )
+        except: print msg
+        
+        return msg_found
+
+        
+    def _resolveHelp(self, entry):
+        if (self._platform_win32):
+            if ('help_win' in entry):
+                return entry.get('help_win', None)
+
+        if (not self._platform_win32):
+            if ('help_nix' in entry):
+                return entry.get('help_nix', None)
+            
+        if ('help' in entry):
+            return entry.get('help', None)
+        
+        return None
+                
+    def handleArguments(self, cmd=None, usage_msg=None, args = None, help_params = None):
+        """ 
+        Processes command line options
+        
+        :param usage_msg: usage message string 
+        :param config_options: the options configuration dictionary
+        :param args: the arguments from the command-line
+        :param help_params: dictionary of parameters used to render the ``help`` messages
+ 
+        """
+        try:
+            usage_msg_tpl = self.template_factory(usage_msg)
+            params = {'commands': cmd.commands_help}
+            msg = usage_msg_tpl.safe_substitute( params )
+        except:
+            msg = usage_msg
+        
+        parser = ExOptionParser( usage=msg )
+        
+        if self.ref_options:
+            parser.ex_add_options( self.ref_options )
+
+        # ask optparse to perform the heavy lifting
+        (self.options, self.args) = parser.parse_args( args )
+        
+        # store the command in a local attribute
+        try:    self.command = self.args[0]
+        except: self.command = None
+
+        
+        
+    def updateRegistry(self, reg):
+        """
+        Updates the registry from the command-line args
+        
+        Goes through the ``args``, verifies if the ``reg``
+        option is to be found in the ``ref_options`` dictionary
+        and updates accordingly the registry.
+        
+        :param reg: the dictionary registry
+        :param ref_options: the reference options list
+        :param options: the processed command-line arguments
+        
+        The registry is a dictionary.
+        """
+        
+        if reg is None:
+            return
+        
+        for o in self.ref_options:
+            #if we are told to update the registry
+            do_update = o.get('reg', False)
+            if do_update:
+
+                # the key 'var' must exist
+                #  or else we do not know where to
+                #  store in the registry
+                key = o.get('dest', None)
+                if key is None:
+                    raise RuntimeError('Missing "dest" key in ref_options')
+
+                # only update if we find a matching argument
+                val = getattr(self.options, key, None) 
+                if (val is not None):
+                    reg[key] = val
+                    
+        return reg
+
+
+
+    def copyOptions(self, target):
+        """ 
+        Copies all `var` entries from the ``source`` dictionary
+        following the ``ref_options`` dictionary into the
+        ``target`` dictionary.
+
+
+        :param source: source dictionary
+        :param target: target object
+        :param ref_options: the reference options list
+        """
+        for o in self.ref_options:
+            key = o.get('dest', None)
+            if key is None:
+                raise RuntimeError("Missing 'dest' key in ref_options")
+            val = getattr(self.options, key, None)
+            setattr( target, key, val )
+
+
+    def integrateRegistry(self, cmd, reg):
+        """
+        Integrate values from the registry where ``None``
+        values are found in the ``cmd`` object
+         
+        :param cmd: the ``cmd`` object
+        :rtype: keys list for all replacement performed 
+        
+        """
+        keys = []
+        for key, value in cmd.iterconfig():
+            if value is None:
+                reg_value = reg.get(key, None)
+                setattr(cmd, key, reg_value)
+                keys.append(key)
+                
+        return keys
+
+                
+    def prepareCmd(self, cmd, reg):
+        """
+        Prepare the command ``cmd`` object
+        
+        1. Options from the command-line have precedence over any other.
+        2. Options with ''None'' value are updated with matching registry value
+        3. The registry is updated where necessary
+         
+        """
+        if self.options is None:
+            raise RuntimeError("prepareCmd should only be called after handleArguments")
+        
+        #1. Update the registry
+        #   ie. copy options to the cmd object
+        self.updateRegistry(reg)
+
+        #2. Copy options to the ``cmd`` object
+        self.copyOptions(cmd)
+
+        #3. Integrate registry values
+        self.integrateRegistry(cmd, reg)
+
+    def dispatchCommand(self, cmd):
+        """
+        """
+        if self.command is None:
+            return None
+        
+        cmd.validateCommand(self.command)
+        
+        self.popArg()
+        
+        return getattr(cmd, "cmd_%s" % self.command )(self.args)
+
+        

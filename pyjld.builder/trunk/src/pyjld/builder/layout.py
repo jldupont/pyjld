@@ -1,0 +1,88 @@
+#!/usr/bin/env python
+"""
+    @author: Jean-Lou Dupont
+"""
+__author__  = "Jean-Lou Dupont"
+__email     = "python (at) jldupont.com"
+__fileid    = "$Id: layout.py 16 2009-04-01 00:09:14Z jeanlou.dupont $"
+
+import os
+import sys
+from string import Template
+
+from pyjld.os import safe_mkdir
+
+_base = "pyjld.builder.layout: %s"
+
+
+dir_list = [    'tags',
+                'trunk',
+                'trunk/tests',
+                'trunk/docs',
+                'trunk/docs/html',
+                'trunk/docs/source',
+                'trunk/docs/source/_static',
+                'trunk/docs/source/_templates',
+                'trunk/docs/source/modules',
+                'trunk/src',
+                'trunk/src/$ns',
+                'trunk/src/$ns/$pkg',
+            ]
+
+
+def build_layout(top, ns, pkg):
+    """
+    Builds the directory layout
+    """
+    for path in dir_list:
+        ppath = subvars(path, ns=ns, pkg=pkg)
+        
+        existed, path=safe_mkdir([top, ppath])
+        if not existed:
+            msg("Created path: [%s]" % ppath)
+    
+    
+def subvars(path, **params):
+    tpl = Template(path)
+    return tpl.safe_substitute( params )
+
+
+def emsg(msg, code=0):
+    """
+    Exit with message
+    """
+    print _base % msg
+    sys.exit(code)
+
+def msg(msg, **params):
+    """
+    Normal message
+    """ 
+    message = _base % msg
+    rendered = Template(message).safe_substitute(params)
+    print rendered
+    
+    
+
+def main(*argv):
+    current_dir = os.getcwd()
+    current_dir_name = os.path.basename( current_dir )
+    
+    try:
+        ns, package = current_dir_name.split('.')
+    except:
+        emsg('top directory must be named following pattern: ns.package',1)
+
+    msg("Building layout for: ns[$ns] package[$pkg]", ns=ns, pkg=package)
+    msg("Top directory [$dir]", dir=current_dir)
+
+    build_layout(current_dir, ns, package)
+    return 0
+
+# ==============================================
+# ==============================================
+
+if __name__ == "__main__":
+    """ 
+    """
+    sys.exit(main())

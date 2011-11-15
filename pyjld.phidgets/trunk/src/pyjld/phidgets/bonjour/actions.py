@@ -1,0 +1,286 @@
+#!/usr/bin/env python
+"""
+pyjld.phidgets.bonjour.actions
+"""
+__author__  = "Jean-Lou Dupont"
+__email     = "python (at) jldupont.com"
+__fileid    = "$Id: actions.py 69 2009-04-17 18:49:17Z jeanlou.dupont $"
+
+__all__ = ['Actions',]
+
+import dbus
+
+
+from Phidgets.Phidget import *
+from Phidgets.PhidgetException import *
+from Phidgets.Manager import *
+
+from pyjld.system.proxy import ProxyCallback
+
+from bus import busSignals
+
+
+class ActionsError(Exception):
+    def __init__(self, msg_id, params=None):
+        Exception.__init__(self, msg_id)
+        self.msg_id = msg_id
+        self.params = params
+
+
+
+
+class Actions(object):
+    """
+    Actions for the Bonjour Controller
+    
+    - Create an instance of this class with a logger
+    - Use createManager
+    - Use wireEvents(controller)
+    - Use openManager
+    
+    Periodically, perform testManager
+
+    """
+    _discoveredFolder="/var/phidgets"
+    
+    
+    def __init__(self, logger):
+        self.manager = None
+        self.logger = logger
+        self.bus    = None
+        
+        self.signals = busSignals()
+    
+    def createSessionBus(self):
+        """
+        Creates a Dbus Session Bus
+        """
+        try:
+            self.bus = dbus.SessionBus()        
+        except:
+            raise ActionsError('error_dbus_sessionbus_creation')
+
+        
+    
+    def createManager(self):
+        """
+        Builds a Phidget Manager
+        
+        :rtype: boolean, result of Manager creation
+        """
+        try:
+            self.manager = Manager()
+            return True
+        except Exception,e:
+            self.logger.error("error_creating_phidgets_manager")
+        
+        self.manager = None
+        return False
+    
+    def wireEventHandlers(self):
+        
+        try:
+            self.manager.setOnAttachHandler(self.doAttach)
+            self.manager.setOnDetachHandler(self.doDetach)
+            #self.manager.setOnErrorHandler(self.doError)
+        except Exception,e:
+            self.logger.error("error_setting_handlers")
+            return False
+        
+        return True
+    
+    def openManager(self):
+        """
+        Opens the manager
+        
+        :rtype: boolean success status
+        """
+        if self.manager:
+            try:
+                self.manager.openManager()
+                return True
+
+            except Exception,e:
+                self.logger.error("error_opening_phidget_manager")
+                return False
+        
+        return False
+            
+    def testManager(self):
+        """
+        Performs a simple test to determine 
+        if the manager appears OK
+        """
+        if not self.manager:
+            return False
+        
+        try:
+            attached_devices = self.manager.getAttachedDevices()
+        except:
+            return False
+        
+        return True
+
+
+    def preparePhidgetsDiscoveredFolder(self):
+        """
+        Creates the folder where discovered phidgets are recorded
+        
+        :rtype: (boolean result, boolean path existed status, path) 
+        """
+
+        try:    existed, path = safe_mkdir(self._discoveredFolder)
+        except: return False, False, None
+        
+        return True, existed, path
+
+    def getDeviceInfo(self, device):
+        """
+        Retrieves information about a given ``device``
+        """
+        try:
+            serial = device.getSerialNum()
+            label  = device.getDeviceLabel()
+            name   = device.getDeviceName()
+            type   = device.getDeviceType()
+            version= device.getDeviceVersion()
+            
+            return {'serial':serial,
+                    'label':label,
+                    'name':name,
+                    'type':type,
+                    'version':version 
+                    }
+        except:
+                return None
+        
+
+    def _doLog(self, msg_id_success, msg_id_failure, device):
+        ""
+        info = self.getDeviceInfo(device)
+        if info is not None:
+            self.logger.info( msg_id_success, **info )
+        else:
+            self.logger.info( msg_id_failure )
+            
+        return info
+
+
+
+    def logAttachEvent(self, phidget):
+        """
+        Logs an ``attach`` event for a device
+        """
+        try:    device=phidget.device
+        except: 
+            #dr = str(dir(phidget))
+            #self.logger.error("logAttachEvent: dr[%s]" % dr)
+            self.logger.error("error_phidget_device", event="attach")
+            return
+            
+        info = self._doLog(    "info_phidget_attached", 
+                        "info_phidget_attached_without_info", 
+                        device
+                        )
+        
+        return info
+        
+        
+    def logDetachEvent(self, phidget):
+        """
+        Logs a ``detach`` event for a device        
+        """
+        try:    device=phidget.device
+        except: 
+            self.logger.error("error_phidget_device", event="detach")
+            return
+        
+        info = self._doLog(    "info_phidget_detached", 
+                        "info_phidget_detached_without_info", 
+                        device
+                        )
+
+        return info
+
+
+    def recordDevice(self, device):
+        """
+        Records in /var/phidgets a device
+        """
+        
+        
+        
+    # ======================================================================
+    # ACTIONS from the Controller
+    # ======================================================================
+
+    
+    def doAttach(self, phidget, *pargs):
+        """
+        """
+        info = self.logAttachEvent(phidget)
+        self.signals.PhidgetFound(info.name, info.serial, info.type)
+        
+        
+    def doDetach(self, phidget, *pargs):
+        """
+        """
+        info = self.logDetachEvent(phidget)
+        
+
+    def doError(self, error, *pargs):
+        """
+        """
+        self.logger.error("error_phidget_error_event")
+
+
+    def doAlarm(self, event, **kwargs):
+        self.logger.info("in doAlarm")
+        
+
+    # ======================================================================
+    # NOT USED
+    # ======================================================================
+
+    def _wireEvents(self, controller):
+        """
+        Wire the manager's event sources 
+        to the target handlers
+        
+        :rtype: boolean success status
+        """
+        _wires = [  ('setOnAttachHandler',  'event_attach'),
+                    ('setOnDetachHandler',  'event_detach'),
+                    ('setOnErrorHandler',   'event_error'),
+                  ]
+        if self.manager:
+            try:
+                self._doWiring(self.manager, _wires, controller)
+            except Exception,e:
+                self.logger.error("error_setting_handlers")
+                return False
+            
+            return True
+        
+        return False
+    
+
+    def _doWiring(self, source, table, target):
+        """
+        Wire 
+        """
+        for entry in table:
+            set_method_name, event = entry
+            source_set_method = getattr(source, set_method_name)
+            self._buildAndWireProxy(source_set_method, event, target)
+
+
+    def _buildAndWireProxy(self, source_set_method, event, target):
+        """
+        Builds a proxy between ``source`` and ``target``
+        identified through ``event``
+        """
+        proxy = ProxyCallback(target, event)
+        source_set_method(proxy)
+
+

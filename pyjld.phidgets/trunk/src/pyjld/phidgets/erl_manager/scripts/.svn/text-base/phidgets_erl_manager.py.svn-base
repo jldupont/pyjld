@@ -1,0 +1,12 @@
+#!/usr/bin/env python
+"""
+pyjld Phidgets Erlang Manager
+
+@author: Jean-Lou Dupont
+"""
+__author__  = "Jean-Lou Dupont"
+__email     = "python (at) jldupont.com"
+__fileid    = "$Id$"
+
+from pyjld.phidgets.erl_manager.main import main
+main()

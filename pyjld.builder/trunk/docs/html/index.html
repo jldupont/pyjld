@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Indices and tables &mdash; pyjld.builder v0.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '',
+          VERSION:     '0.1',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="contents.html" />
+    <link rel="index" title="Global index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="pyjld.builder v0.1 documentation" href="" />
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li><a href="">pyjld.builder v0.1 documentation</a> &raquo;</li>
+      </ul>
+    </div>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  
+  <p id="module-pyjld.builder.tools">pyjld.builder.tools</p>
+<p>&#64;author: Jean-Lou Dupont</p>
+<dl class="function">
+<dt id="pyjld.builder.tools.copyEggs">
+<!--[pyjld.builder.tools.copyEggs]--><tt class="descclassname">pyjld.builder.tools.</tt><tt class="descname">copyEggs</tt><big>(</big><em>list</em>, <em>source_pkg</em>, <em>release_dir</em><big>)</big><a class="headerlink" href="#pyjld.builder.tools.copyEggs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copies a list of eggs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><em>list</em> &#8211; eggs list</li>
+<li><em>source_pkg</em> &#8211; the source directory</li>
+<li><em>release_dir</em> &#8211; the target directory</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The egg list is of the form</p>
+<div class="highlight"><pre><span class="p">[</span> <span class="p">(</span><span class="n">egg_type</span><span class="p">,</span> <span class="n">egg_version</span><span class="p">,</span> <span class="n">egg_name</span><span class="p">),</span> <span class="o">...</span> <span class="p">]</span>
+</pre></div>
+<p>The function returns the list of files copied in the form</p>
+<div class="highlight"><pre><span class="p">[</span> <span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">dest_file</span><span class="p">),</span> <span class="o">...</span> <span class="p">]</span>
+</pre></div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyjld.builder.tools.extractNsPackage">
+<!--[pyjld.builder.tools.extractNsPackage]--><tt class="descclassname">pyjld.builder.tools.</tt><tt class="descname">extractNsPackage</tt><big>(</big><em>name</em>, <em>filterEmptyNs=True</em><big>)</big><a class="headerlink" href="#pyjld.builder.tools.extractNsPackage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the tuple (ns,package) from the specified name</p>
+<p>The parameter :param name: must correspond to a directory name.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyjld.builder.tools.findPackage">
+<!--[pyjld.builder.tools.findPackage]--><tt class="descclassname">pyjld.builder.tools.</tt><tt class="descname">findPackage</tt><big>(</big><em>root='C:Documents and SettingsJean-Lou DupontMy Documentsworkspace_gaepyjldtrunkpyjld.buildertrunk'</em><big>)</big><a class="headerlink" href="#pyjld.builder.tools.findPackage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the package&#8217;s root</p>
+<p>The package directory must be of the form <tt class="docutils literal"><span class="pre">ns.package</span></tt>.
+The :param root: represents the starting directory in the
+child hierarchy of the said package.</p>
+<p>The default :param root: parameter is the current directory.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyjld.builder.tools.findPackages">
+<!--[pyjld.builder.tools.findPackages]--><tt class="descclassname">pyjld.builder.tools.</tt><tt class="descname">findPackages</tt><big>(</big><em>root</em><big>)</big><a class="headerlink" href="#pyjld.builder.tools.findPackages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the packages from the root path</p>
+<p>Verifies the :param root: directory for the presence of
+valid packages i.e. directory name of the form</p>
+<div class="highlight"><pre><span class="n">namespace</span><span class="o">.</span><span class="n">package</span>
+</pre></div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyjld.builder.tools.getShortAndLongDescription">
+<!--[pyjld.builder.tools.getShortAndLongDescription]--><tt class="descclassname">pyjld.builder.tools.</tt><tt class="descname">getShortAndLongDescription</tt><big>(</big><em>module</em><big>)</big><a class="headerlink" href="#pyjld.builder.tools.getShortAndLongDescription" title="Permalink to this definition">¶</a></dt>
+<dd>Returns the short and long description documentation strings
+from a loaded module</dd></dl>
+
+<dl class="function">
+<dt id="pyjld.builder.tools.keepBaseNames">
+<!--[pyjld.builder.tools.keepBaseNames]--><tt class="descclassname">pyjld.builder.tools.</tt><tt class="descname">keepBaseNames</tt><big>(</big><em>files</em><big>)</big><a class="headerlink" href="#pyjld.builder.tools.keepBaseNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps the :param files: list consisting of</p>
+<div class="highlight"><pre><span class="p">[</span> <span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">dest_file</span><span class="p">)</span> <span class="p">]</span>
+</pre></div>
+<p>to their basenames.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyjld.builder.tools.makeEggReleaseDir">
+<!--[pyjld.builder.tools.makeEggReleaseDir]--><tt class="descclassname">pyjld.builder.tools.</tt><tt class="descname">makeEggReleaseDir</tt><big>(</big><em>version</em>, <em>root</em><big>)</big><a class="headerlink" href="#pyjld.builder.tools.makeEggReleaseDir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make an <cite>egg</cite> release directory in the <cite>root</cite> directory</p>
+<p>The directory path will be according to the following</p>
+<pre>$root/$version/eggs</pre>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyjld.builder.tools.makeModuleName">
+<!--[pyjld.builder.tools.makeModuleName]--><tt class="descclassname">pyjld.builder.tools.</tt><tt class="descname">makeModuleName</tt><big>(</big><em>ns</em>, <em>package</em><big>)</big><a class="headerlink" href="#pyjld.builder.tools.makeModuleName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pyjld.builder.tools.pprintFiles">
+<!--[pyjld.builder.tools.pprintFiles]--><tt class="descclassname">pyjld.builder.tools.</tt><tt class="descname">pprintFiles</tt><big>(</big><em>files</em>, <em>base_msg</em><big>)</big><a class="headerlink" href="#pyjld.builder.tools.pprintFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pretty prints a list of file names using :param base_msg: 
+message as string template</p>
+<p>The template parameters declared are:</p>
+<ul class="simple">
+<li><cite>src</cite></li>
+<li><cite>dest</cite></li>
+</ul>
+</dd></dl>
+
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference external" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference external" href="modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference external" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/index.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li><a href="">pyjld.builder v0.1 documentation</a> &raquo;</li>
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright  -- Jean-Lou Dupont.
+      Last updated on Apr 01, 2009.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+    </div>
+  </body>
+</html>

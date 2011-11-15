@@ -1,0 +1,23 @@
+>>> import pyjld.logger
+>>> messages = {'msg1':"Message1 [$var]"}
+>>> ml = pyjld.logger.MsgLogger('whatever', messages, include_console=True)
+>>> ml.info('msg1', var="variable1")
+20...whatever     INFO    : Message1 [variable1] 
+
+
+
+
+>>> def filter(source, object, **kwargs):
+...		if object is "must_filter":
+...			return True
+...		return False
+>>> messages = {'msg2':"Message2 [$var]",
+...				'must_filter': "This message should be filtered", 
+...				'must_not_filter':"Must not be filtered"}
+>>> ml2 = pyjld.logger.MsgLogger('whatever', messages, include_console=True)
+>>> ml2.addFilter(filter)
+>>> ml2.info("must_filter")  # MESSAGE MUST NOT APPEAR
+>>> ml2.info("must_not_filter")
+20...whatever     INFO    : Must not be filtered
+>>> ml2.info("msg2", var="variable2")
+20...whatever     INFO    : Message2 [variable2]

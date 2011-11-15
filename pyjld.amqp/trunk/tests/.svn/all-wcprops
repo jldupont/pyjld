@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/69/trunk/pyjld.amqp/trunk/tests
+END
+test.py
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/69/trunk/pyjld.amqp/trunk/tests/test.py
+END
+test_protocol.py
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/62/trunk/pyjld.amqp/trunk/tests/test_protocol.py
+END
+test_protocol.txt
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/68/trunk/pyjld.amqp/trunk/tests/test_protocol.txt
+END

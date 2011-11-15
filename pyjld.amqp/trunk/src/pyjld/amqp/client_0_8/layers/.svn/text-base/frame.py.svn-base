@@ -1,0 +1,76 @@
+#!/usr/bin/env python
+"""
+pyjld.amqp.client_0_8.layers.frame
+"""
+__author__  = "Jean-Lou Dupont"
+__email     = "python (at) jldupont.com"
+__fileid    = "$Id$"
+
+__all__ = ['FrameException',
+           'FrameLayer',
+           ]
+
+from pyjld.amqp.client_0_8.base            import BaseException
+from pyjld.amqp.client_0_8.layers.base     import LayerBase
+
+
+class FrameException(BaseException):
+    """
+    Protocol level Exception
+    """
+
+
+
+class FrameLayer(LayerBase):
+    """
+    Handles the frame layer
+    """
+    
+    _ATTRIBUTES = [ 'type', 'cycle', 'channel', 'size'
+                   ]
+    
+                        #   type    attr    expected/value
+    _DIRECTIVES = [     ( "octet",  None,        65), #A
+                        ( "octet",  None,        77), #M
+                        ( "octet",  None,        81), #Q
+                        ( "octet",  None,        80), #P
+                        ( "octet",  None,        1),
+                        ( "octet",  None,        1),
+                        ( "octet",  None,        9),
+                        ( "octet",  None,        1),
+                        ( "octet",  "type",      None),
+                        ( "octet",  "cycle",     None),
+                        ( "short",  "channel",   None),
+                        ( "long",   "size",      None),
+                   ]
+    
+    def readHeader(self):
+        self._readList(FrameLayer._DIRECTIVES)
+
+    def readBody(self):
+        pass
+    
+    def readFooter(self):
+        try:
+            footer = self._stream.read_octet()
+        except:
+            self._raise("error reading footer",
+                        "error_protocol_reading_footer")
+            
+        if footer != "\xce":
+            self._raise("invalid footer",
+                        "error_protocol_invalid_footer")
+    
+    def writeHeader(self):
+        self._writeList(FrameLayer._DIRECTIVES)
+    
+    def writeBody(self):
+        pass
+    
+    def writeFooter(self):
+        self._stream.write_octet("\xCE")
+    
+    def _getExceptionClass(self):
+        return FrameException
+    
+

@@ -1,0 +1,92 @@
+
+Simple Protocol Test
+====================
+
+** Valid Protocol Unit **
+
+>>> from pyjld.amqp.client_0_8.serialization import AMQPReader
+>>> from pyjld.amqp.client_0_8.layers.protocol import ProtocolLayer, ProtocolException
+>>> pu_string = "AMQP\x01\x01\x09\x01abcdefghijklmnopqrstuvwxyz\xCE"
+>>> pb=AMQPReader(pu_string)
+>>> pr=ProtocolLayer()
+>>> pr.setStream(pb)
+>>> pr.processHeader( pb )
+
+
+** Invalid Header in Protocol Unit **
+
+>>> pu_string = "AMQPxxxxabcdefghijklmnopqrstuvwxyz\xCE"
+>>> pb=AMQPReader(pu_string)
+>>> pr=ProtocolReader()
+>>> pr.processHeader( pb )
+Traceback (most recent call last):
+...
+ProtocolException: expecting [1] got[120]
+
+
+
+** Simple Frame Properties **
+
+>>> from pyjld.amqp.client_0_8.layers.frame import FrameReader
+>>> pu_string = "AMQP\x01\x01\x09\x01"+"\x01\x02\x12\x34\x12\x34\x56\x78abcdefghijklmnopqrstuvwxyz\xCE"
+>>> pb=AMQPReader(pu_string)
+>>> pr=ProtocolReader()      # must skip the protocol layer
+>>> pr.processHeader( pb )   #
+>>> fr=FrameReader()            #we should be at the Frame layer
+>>> fr.processHeader( pb )      #
+
+>>> print fr.type
+1
+>>> print fr.cycle
+2
+>>> print fr.channel   # \x12 \x34
+4660
+>>> print fr.size      # \x12 \x34 \x56 \x78
+305419896
+
+
+** Short Protocol Unit **
+
+>>> pu_string = "AMQP"
+>>> pb=AMQPReader(pu_string)
+>>> pr=ProtocolReader()      
+>>> pr.processHeader( pb )   #too short...
+Traceback (most recent call last):
+...
+ProtocolException: EOF reached, expecting type[octet]
+
+
+** Simple Test for Write direction **
+>>> from pyjld.amqp.client_0_8.layers.frame import FrameWriter
+>>> fr = FrameWriter()
+>>> buf = fr.getBuffer()
+>>> print buf
+AMQP...
+>>> print len(buf)  # one too much....
+16
+>>> ord(buf[4]) == 1   # Protocol Layer  
+True
+>>> ord(buf[5]) == 1   # Protocol Layer
+True
+>>> ord(buf[6]) == 9   # Protocol Layer
+True
+>>> ord(buf[7]) == 1   # Protocol Layer
+True
+>>> ord(buf[8]) == 0   # Frame Layer  - type field
+True
+>>> ord(buf[9]) == 0   # Frame Layer  - cycle field
+True
+>>> ord(buf[10])== 0   # Frame Layer  - channel field 1/2
+True
+>>> ord(buf[11])== 0   # Frame Layer  - channel field 2/2
+True
+>>> ord(buf[12])== 0   # Frame Layer  - size field 1/4
+True
+>>> ord(buf[13])== 0   # Frame Layer  - size field 2/4
+True
+>>> ord(buf[14])== 0   # Frame Layer  - size field 3/4
+True
+>>> ord(buf[15])== 0   # Frame Layer  - size field 4/4
+True
+>>> buf[16] == "\xce"  # Protocol Layer  - trailer
+True

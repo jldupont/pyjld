@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/97/trunk/pyjld.notifier/trunk/src/pyjld/notifier
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/89/trunk/pyjld.notifier/trunk/src/pyjld/notifier/__init__.py
+END
+tools.py
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/95/trunk/pyjld.notifier/trunk/src/pyjld/notifier/tools.py
+END
+main.py
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/97/trunk/pyjld.notifier/trunk/src/pyjld/notifier/main.py
+END
+db.py
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/94/trunk/pyjld.notifier/trunk/src/pyjld/notifier/db.py
+END
+rss.py
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/95/trunk/pyjld.notifier/trunk/src/pyjld/notifier/rss.py
+END

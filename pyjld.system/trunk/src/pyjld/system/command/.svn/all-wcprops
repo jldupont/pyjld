@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/69/trunk/pyjld.system/trunk/src/pyjld/system/command
+END
+base.py
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/38/trunk/pyjld.system/trunk/src/pyjld/system/command/base.py
+END
+ui.py
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/69/trunk/pyjld.system/trunk/src/pyjld/system/command/ui.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/34/trunk/pyjld.system/trunk/src/pyjld/system/command/__init__.py
+END

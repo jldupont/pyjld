@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+"""
+    @author: Jean-Lou Dupont
+"""
+__author__  = "Jean-Lou Dupont"
+__email     = "python (at) jldupont.com"
+__fileid    = "$Id$"
+
+import sys
+
+import pyjld.builder.layout
+
+sys.exit( main(sys.argv) )

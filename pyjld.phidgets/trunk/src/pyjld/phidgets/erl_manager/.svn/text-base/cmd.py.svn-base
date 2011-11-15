@@ -1,0 +1,77 @@
+#!/usr/bin/env python
+"""
+pyjld.phidgets.erl_manager.cmd
+"""
+__author__  = "Jean-Lou Dupont"
+__email     = "python (at) jldupont.com"
+__fileid    = "$Id$"
+
+__all__ = ['PhidgetsErlManagerCmd',]
+
+from pyjld.system.command.base import BaseCmd, BaseCmdException
+import pyjld.system.daemon as daemon
+
+from erl_manager_daemon import PhidgetsErlManagerDaemon
+
+
+class PhidgetsErlManagerCmd(BaseCmd):
+
+    def __init__(self, logger_factory, messages):
+        BaseCmd.__init__(self)
+        self.logger_factory = logger_factory
+        self.messages = messages
+        
+        self.app = PhidgetsErlManagerDaemon(self.logger_factory, self.messages)
+        self.runner = daemon.DaemonRunner( self.app )
+
+        self.config_erl_name   = None
+        self.config_erl_port   = None
+        self.config_erl_cookie = None
+
+    #================================================
+    # COMMANDS
+    #================================================
+
+        
+    def cmd_start(self, *pargs):
+        """Start the daemon"""
+        try:
+            self.setParams()
+            self.runner.cmd_start()
+        except Exception,e:
+            self._handleException(e)
+        
+    def cmd_stop(self, *pargs):
+        """Stop the daemon"""
+        try:
+            self.setParams()            
+            self.runner.cmd_stop()
+        except Exception,e:
+            self._handleException(e)
+            e.already_handled=True
+            
+    def cmd_restart(self, *pargs):
+        """Restarts the daemon"""
+        try:
+            self.setParams()            
+            self.runner.cmd_restart()
+        except Exception,e:
+            self._handleException(e)
+            e.already_handled=True
+                
+                
+    #================================================
+    # PRIVATE
+    #================================================
+    def setParams(self):
+        self.runner.setParams(self.config_erl_name, 
+                              self.config_erl_port,
+                              self.config_erl_cookie)
+                
+                
+    def _getLogger(self, console=False):
+        return self.logger_factory(console)
+            
+    def _handleException(self,e):
+        logger = self._getLogger()
+        logger.error(e)
