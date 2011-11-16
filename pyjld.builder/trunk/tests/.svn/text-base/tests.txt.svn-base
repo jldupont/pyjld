@@ -1,9 +1,0 @@
-Tools
-=====
-
->>> import os
->>> import pyjld.builder.tools as bt
->>> cd = os.getcwd()
->>> path, ns, pkg = bt.findPackage(cd)
->>> ns, pkg
-('pyjld', 'builder')
