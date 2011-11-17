@@ -11,6 +11,7 @@ Changelog
 *0.5*
 
 * command.ui: ref_options are now optional
+* added 'mswitch' & 'base' for agent design pattern
 
 *0.4*
 

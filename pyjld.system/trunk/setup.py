@@ -12,7 +12,7 @@ from setuptools import setup, find_packages
 
 from pyjld.builder import findPackage, getShortAndLongDescription
 
-#helps with Eclipse external buidler
+#helps with Eclipse external builder
 __file__dir = os.path.dirname( __file__ )
 os.chdir(__file__dir)
 
@@ -24,7 +24,8 @@ version          = this_module.__version__
 
 short_description, long_description = getShortAndLongDescription(this_module) 
 
-_doc_url = "http://pyjld.googlecode.com/svn/trunk/%s.%s/tags/%s/docs/index.html" % (ns,package,version)
+#_doc_url = "http://pyjld.googlecode.com/svn/trunk/%s.%s/tags/%s/docs/index.html" % (ns,package,version)
+_doc_url = "http://jldupont.github.com/%s/%s/tags/%s/docs/" % (ns,package,version)
 
 dist = setup(
     name             = this_module_name,
